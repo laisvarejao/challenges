@@ -11,15 +11,28 @@ class MyHash
   end
 
   def get_value(key)
-    hash_code = generate_hash_code(key)
-    get_value_for(hash_code, key)
+    begin
+      hash_code = generate_hash_code(key)
+      get_value_for(hash_code, key)
+    rescue SystemStackError
+      puts "ops, the key '#{key}' doesn't exist."
+    end
+  end
+
+  def remove(key)
+    begin
+      hash_code = generate_hash_code(key)
+      remove_key_for(hash_code, key)
+    rescue SystemStackError
+      puts "ops, the key '#{key}' doesn't exist."
+    end
   end
 
   private
 
     def add_to_next_available_position(hash_code, key, value)
-      unless occupied_by?(hash_code)
-        add_to(hash_code, key, value)
+      unless occupied?(hash_code)
+        add_to_hash(hash_code, key, value)
       else
         if occupied_by_correct_key?(hash_code, key)
           add_value(hash_code, value)
@@ -34,7 +47,7 @@ class MyHash
       key.each_byte { |b| b }.sum
     end
 
-    def occupied_by?(hash_code)
+    def occupied?(hash_code)
       @keys[hash_code]
     end
 
@@ -42,7 +55,7 @@ class MyHash
       @keys[hash_code] == key
     end
 
-    def add_to(hash_code, key, value)
+    def add_to_hash(hash_code, key, value)
       add_key(hash_code, key)
       add_value(hash_code, value)
     end
@@ -66,6 +79,28 @@ class MyHash
         hash_code = increment(hash_code)
         get_value_for(hash_code, key)
       end
+    end
+
+    def remove_key_for(hash_code, key)
+      if occupied_by_correct_key?(hash_code, key)
+        remove_key_value_pair(hash_code)
+      else
+        hash_code = increment(hash_code)
+        remove_key_for(hash_code, key)
+      end
+    end
+
+    def remove_key_value_pair(hash_code)
+      remove_key(hash_code)
+      remove_value(hash_code)
+    end
+
+    def remove_key(hash_code)
+      @keys[hash_code] = []
+    end
+
+    def remove_value(hash_code)
+      @values[hash_code] = []
     end
 
 end
