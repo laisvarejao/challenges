@@ -24,10 +24,10 @@ def max_total(matrix)
         node = row[i]
 
         left_parent = parent_row[i - 1]
-        righ_parent = parent_row[i]
+        right_parent = parent_row[i]
 
         if left_parent && righ_parent
-          max_sum = [node + left_parent, node + righ_parent].max
+          max_sum = [node + left_parent, node + right_parent].max
         elsif left_parent
           max_sum = node + left_parent
         elsif right_parent
