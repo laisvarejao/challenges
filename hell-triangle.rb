@@ -12,7 +12,9 @@
 # or just another function/method)
 # Your code will receive an (multidimensional) array as input.
 # The triangle from above would be:
-# example = [[6],[3,5],[9,7,1],[4,6,8,4]]
+# example = [[6],[-3,-5],[9,-7,1],[4,6,8,4]]
+
+example = [[-1], [1, 3]]
 
 def max_total(matrix)
   matrix.each_with_index do |row, level|
@@ -20,12 +22,25 @@ def max_total(matrix)
       parent_row = matrix[level - 1]
       (0..level).each do |i|
         node = row[i]
-        left_parent = parent_row[i - 1] || 0 
-        righ_parent = parent_row[i] || 0
-        max_sum = [left_parent + node, righ_parent + node].max
+
+        left_parent = parent_row[i - 1]
+        righ_parent = parent_row[i]
+
+        if left_parent && righ_parent
+          max_sum = [node + left_parent, node + righ_parent].max
+        elsif left_parent
+          max_sum = node + left_parent
+        elsif right_parent
+          max_sum = node + right_parent
+        else
+          max_sum = node
+        end
+
         matrix[level][i] = max_sum
       end  
     end
   end
   matrix.last.max
 end
+
+puts max_total(example)
