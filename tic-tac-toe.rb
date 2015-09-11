@@ -12,6 +12,7 @@ class TicTacToe
 		loop do
 			@current_player = PLAYERS.keys.first
 			play
+			break unless play_again?
 		end
 	end
 
@@ -20,6 +21,12 @@ class TicTacToe
 		introduction
 		start_game
 		end_of_game
+	end
+
+	def play_again?
+		puts 'Do you wish to play again? [Y]'
+		answer = gets.chomp
+		answer == 'y'
 	end
 
 	private
@@ -40,8 +47,8 @@ class TicTacToe
 
 		def print_game_board
 			(0...3).each do |i| 
-				puts "#{@game_board["p#{1 + 3 * i}"]} | #{@game_board["p#{ 2 + 3 * i}"]} | #{@game_board["p#{ 3 + 3 * i}"]}" 
 				puts '------------'
+				puts "#{@game_board["p#{1 + 3 * i}"]} | #{@game_board["p#{ 2 + 3 * i}"]} | #{@game_board["p#{ 3 + 3 * i}"]}" 
 			end
 		end
 
